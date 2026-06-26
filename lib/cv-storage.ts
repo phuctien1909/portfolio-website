@@ -21,7 +21,15 @@ export function loadCV(): CVData {
 
 export function saveCV(data: CVData): void {
   if (typeof window === 'undefined') return;
-  localStorage.setItem(CV_KEY, JSON.stringify(data));
+  try {
+    localStorage.setItem(CV_KEY, JSON.stringify(data));
+  } catch (e) {
+    if (e instanceof DOMException && e.name === 'QuotaExceededError') {
+      alert('Save failed: storage quota exceeded. Remove the portrait photo to reduce data size, then try again.');
+    } else {
+      throw e;
+    }
+  }
 }
 
 export function exportJSON(data: CVData): void {

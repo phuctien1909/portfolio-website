@@ -1,17 +1,7 @@
 'use client';
-import dynamic from 'next/dynamic';
+import { PDFDownloadLink } from '@react-pdf/renderer';
+import { CVPDFDocument } from './CVPDFDocument';
 import type { CVData } from '@/lib/cv-types';
-
-// ponytail: dynamic imports required — @react-pdf/renderer uses browser canvas API, breaks SSR
-const PDFDownloadLink = dynamic(
-  () => import('@react-pdf/renderer').then(m => m.PDFDownloadLink),
-  { ssr: false }
-);
-
-const CVPDFDocument = dynamic(
-  () => import('./CVPDFDocument').then(m => m.CVPDFDocument),
-  { ssr: false }
-);
 
 export function PDFExportButton({ data }: { data: CVData }) {
   return (

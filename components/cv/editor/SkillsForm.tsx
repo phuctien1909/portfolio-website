@@ -29,12 +29,12 @@ export function SkillsForm({
         {value.map(skill => (
           <span
             key={skill}
-            className="flex items-center gap-1 bg-blue-100 text-blue-800 px-2.5 py-1 rounded-full text-sm"
+            className="flex items-center gap-1 bg-violet-100 text-violet-800 px-2.5 py-1 rounded-full text-sm"
           >
             {skill}
             <button
               onClick={() => onChange(value.filter(s => s !== skill))}
-              className="ml-1 text-blue-500 hover:text-red-500 font-bold leading-none"
+              className="ml-1 text-violet-400 hover:text-red-500 font-bold leading-none"
               aria-label={`Remove ${skill}`}
             >
               ×
@@ -48,11 +48,11 @@ export function SkillsForm({
           onChange={e => setInput(e.target.value)}
           onKeyDown={handleKey}
           placeholder="Type a skill and press Enter or comma"
-          className="flex-1 border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="flex-1 border border-zinc-300 rounded-md px-3 py-2 text-sm bg-white text-zinc-900 focus:outline-none focus:ring-2 focus:ring-violet-500"
         />
         <button
           onClick={addSkill}
-          className="px-4 py-2 bg-blue-600 text-white rounded text-sm hover:bg-blue-700"
+          className="px-4 py-2 bg-violet-700 text-white rounded-lg text-sm hover:bg-violet-600 transition-colors"
         >
           Add
         </button>

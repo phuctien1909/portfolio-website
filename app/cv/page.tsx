@@ -47,30 +47,35 @@ export default function CVPage() {
   return (
     <main className="max-w-4xl mx-auto px-4 py-8">
       {/* Action bar */}
-      <div className="flex flex-wrap gap-2 mb-8">
+      <div className="flex flex-wrap gap-2 mb-8 items-center">
         <Link
           href="/cv/edit"
-          className="px-4 py-2 bg-gray-100 rounded text-sm hover:bg-gray-200 font-medium"
+          className="px-4 py-2 bg-violet-700 text-white rounded-lg text-sm hover:bg-violet-600 transition-colors font-medium"
         >
-          ✏️ Edit CV
+          Edit CV
         </Link>
         <PDFExportButton data={cv} />
+        <div className="w-px h-5 bg-zinc-300 mx-1" />
         <button
           onClick={() => exportJSON(cv)}
-          className="px-4 py-2 border border-gray-300 rounded text-sm hover:bg-gray-50"
+          className="px-4 py-2 border border-zinc-300 rounded-lg text-sm text-zinc-600 hover:border-zinc-400 hover:text-zinc-900 transition-colors"
         >
           Export JSON
         </button>
         <button
           onClick={() => jsonInputRef.current?.click()}
-          className="px-4 py-2 border border-gray-300 rounded text-sm hover:bg-gray-50"
+          className="px-4 py-2 border border-zinc-300 rounded-lg text-sm text-zinc-600 hover:border-zinc-400 hover:text-zinc-900 transition-colors"
         >
           Import JSON
         </button>
         <input ref={jsonInputRef} type="file" accept=".json" className="hidden" onChange={handleJSONImport} />
         <button
           onClick={() => setShowPDFImporter(v => !v)}
-          className={`px-4 py-2 border rounded text-sm ${showPDFImporter ? 'bg-yellow-100 border-yellow-400' : 'border-gray-300 hover:bg-gray-50'}`}
+          className={`px-4 py-2 border rounded-lg text-sm transition-colors ${
+            showPDFImporter
+              ? 'bg-violet-50 border-violet-400 text-violet-700'
+              : 'border-zinc-300 text-zinc-600 hover:border-zinc-400 hover:text-zinc-900'
+          }`}
         >
           Import PDF
         </button>
@@ -82,7 +87,9 @@ export default function CVPage() {
         </div>
       )}
 
-      <CVPreview data={cv} />
+      <div className="rounded-xl border border-zinc-200 overflow-hidden shadow-sm">
+        <CVPreview data={cv} />
+      </div>
     </main>
   );
 }
