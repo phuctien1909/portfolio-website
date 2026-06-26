@@ -1,5 +1,9 @@
 import type { CVData } from '@/lib/cv-types';
 
+function safeUrl(url: string): string {
+  return /^https?:\/\//i.test(url) ? url : '#';
+}
+
 export function CVPreview({ data }: { data: CVData }) {
   const { personal, summary, experience, education, skills, projects } = data;
   return (
@@ -13,12 +17,12 @@ export function CVPreview({ data }: { data: CVData }) {
           {personal.phone && <span>{personal.phone}</span>}
           {personal.location && <span>{personal.location}</span>}
           {personal.website && (
-            <a href={personal.website} className="underline hover:text-blue-600" target="_blank" rel="noreferrer">
+            <a href={safeUrl(personal.website)} className="underline hover:text-blue-600" target="_blank" rel="noreferrer">
               {personal.website}
             </a>
           )}
           {personal.linkedin && (
-            <a href={personal.linkedin} className="underline hover:text-blue-600" target="_blank" rel="noreferrer">
+            <a href={safeUrl(personal.linkedin)} className="underline hover:text-blue-600" target="_blank" rel="noreferrer">
               LinkedIn
             </a>
           )}
@@ -87,7 +91,7 @@ export function CVPreview({ data }: { data: CVData }) {
               <div className="flex justify-between items-baseline">
                 <span className="font-semibold">{proj.name}</span>
                 {proj.url && (
-                  <a href={proj.url} className="text-xs underline text-blue-600 shrink-0 ml-2" target="_blank" rel="noreferrer">
+                  <a href={safeUrl(proj.url)} className="text-xs underline text-blue-600 shrink-0 ml-2" target="_blank" rel="noreferrer">
                     Link ↗
                   </a>
                 )}

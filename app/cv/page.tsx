@@ -31,7 +31,11 @@ export default function CVPage() {
   function handlePDFImport(partial: Partial<CVData>) {
     setCV(prev => {
       if (!prev) return prev;
-      const merged = { ...prev, ...partial };
+      const merged = {
+        ...prev,
+        ...partial,
+        personal: { ...prev.personal, ...(partial.personal ?? {}) },
+      };
       saveCV(merged);
       return merged;
     });

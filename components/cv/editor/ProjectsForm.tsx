@@ -77,6 +77,7 @@ export function ProjectsForm({
                 <span key={t} className="flex items-center gap-1 bg-gray-100 px-2 py-0.5 rounded text-xs">
                   {t}
                   <button
+                    aria-label={`Remove ${t}`}
                     onClick={() => patch(proj.id, { technologies: proj.technologies.filter(x => x !== t) })}
                     className="text-gray-400 hover:text-red-500"
                   >

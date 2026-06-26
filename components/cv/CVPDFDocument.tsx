@@ -3,6 +3,10 @@ import {
 } from '@react-pdf/renderer';
 import type { CVData } from '@/lib/cv-types';
 
+function safeUrl(url: string): string {
+  return /^https?:\/\//i.test(url) ? url : '#';
+}
+
 const s = StyleSheet.create({
   page: { padding: 40, fontFamily: 'Helvetica', fontSize: 10, color: '#1a1a1a' },
   name: { fontSize: 22, fontWeight: 'bold', marginBottom: 3 },
@@ -31,8 +35,8 @@ export function CVPDFDocument({ data }: { data: CVData }) {
           {personal.email && <Text>{personal.email}</Text>}
           {personal.phone && <Text>{personal.phone}</Text>}
           {personal.location && <Text>{personal.location}</Text>}
-          {personal.website && <Link src={personal.website}>{personal.website}</Link>}
-          {personal.linkedin && <Link src={personal.linkedin}>LinkedIn</Link>}
+          {personal.website && <Link src={safeUrl(personal.website)}>{personal.website}</Link>}
+          {personal.linkedin && <Link src={safeUrl(personal.linkedin)}>LinkedIn</Link>}
         </View>
 
         {summary ? (
@@ -89,7 +93,7 @@ export function CVPDFDocument({ data }: { data: CVData }) {
               <View key={i} style={{ marginBottom: 6 }}>
                 <View style={s.rowBetween}>
                   <Text style={s.bold}>{proj.name}</Text>
-                  {proj.url ? <Link src={proj.url} style={{ fontSize: 8, color: '#3b82f6' }}>Link</Link> : null}
+                  {proj.url ? <Link src={safeUrl(proj.url)} style={{ fontSize: 8, color: '#3b82f6' }}>Link</Link> : null}
                 </View>
                 {proj.description ? <Text>{proj.description}</Text> : null}
                 {proj.technologies.filter(Boolean).length > 0 && (

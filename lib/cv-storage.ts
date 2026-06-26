@@ -7,13 +7,20 @@ export function loadCV(): CVData {
   if (typeof window === 'undefined') return defaultCV;
   try {
     const raw = localStorage.getItem(CV_KEY);
-    return raw ? { ...defaultCV, ...JSON.parse(raw) } : defaultCV;
+    if (!raw) return defaultCV;
+    const stored = JSON.parse(raw);
+    return {
+      ...defaultCV,
+      ...stored,
+      personal: { ...defaultCV.personal, ...(stored.personal ?? {}) },
+    };
   } catch {
     return defaultCV;
   }
 }
 
 export function saveCV(data: CVData): void {
+  if (typeof window === 'undefined') return;
   localStorage.setItem(CV_KEY, JSON.stringify(data));
 }
 
@@ -24,7 +31,7 @@ export function exportJSON(data: CVData): void {
   a.href = url;
   a.download = `${data.personal.name || 'cv'}-data.json`;
   a.click();
-  URL.revokeObjectURL(url);
+  setTimeout(() => URL.revokeObjectURL(url), 100);
 }
 
 export async function importJSON(file: File): Promise<CVData> {
