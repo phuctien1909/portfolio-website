@@ -1,7 +1,12 @@
 'use client';
+import dynamic from 'next/dynamic';
 import { CVPreview } from '@/components/cv/CVPreview';
-import { PDFExportButton } from '@/components/cv/PDFExportButton';
 import { defaultCV } from '@/lib/cv-defaults';
+
+const PDFExportButton = dynamic(
+  () => import('@/components/cv/PDFExportButton').then(m => m.PDFExportButton),
+  { ssr: false }
+);
 
 const testCV = {
   ...defaultCV,
