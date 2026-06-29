@@ -86,6 +86,21 @@ export function ProjectsForm({
               />
             </label>
           ))}
+          <div className="flex gap-3">
+            {(['startDate', 'endDate'] as const).map(field => (
+              <label key={field} className="flex-1">
+                <span className="text-xs font-medium text-zinc-600">
+                  {field === 'startDate' ? 'Start Date (optional)' : 'End Date (optional)'}
+                </span>
+                <input
+                  value={proj[field] ?? ''}
+                  onChange={e => patch(proj.id, { [field]: e.target.value })}
+                  placeholder="e.g. 2023"
+                  className="mt-0.5 block w-full border border-zinc-200 rounded px-2 py-1.5 text-sm focus:outline-none focus:ring-1 focus:ring-violet-500 bg-white text-zinc-900"
+                />
+              </label>
+            ))}
+          </div>
           <label className="block">
             <span className="text-xs font-medium text-zinc-600">Description</span>
             <textarea

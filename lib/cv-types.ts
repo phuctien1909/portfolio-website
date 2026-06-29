@@ -46,6 +46,8 @@ export interface Project {
   location?: string;
   teamSize?: string;
   role?: string;
+  startDate?: string;
+  endDate?: string;
 }
 
 export interface CVData {

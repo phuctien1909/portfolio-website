@@ -117,21 +117,24 @@ export function CVPreview({ data }: { data: CVData }) {
             <div key={proj.id} className="mb-4">
               <div className="flex justify-between items-baseline">
                 <span className="font-semibold text-zinc-900">{proj.name}</span>
-                {proj.url && (
-                  <a href={safeUrl(proj.url)} className="text-sm text-violet-600 hover:underline shrink-0 ml-2" target="_blank" rel="noreferrer">
-                    Link ↗
-                  </a>
-                )}
+                <span className="text-sm text-zinc-400 shrink-0 ml-2 tabular-nums">
+                  {proj.startDate}{proj.endDate ? ` – ${proj.endDate}` : proj.startDate ? ' – Present' : ''}
+                </span>
               </div>
-              {(proj.location || proj.teamSize) && (
-                <p className="text-zinc-400 text-[13px] mt-0.5">
-                  {[proj.location, proj.teamSize ? `Team: ${proj.teamSize}` : ''].filter(Boolean).join(' · ')}
-                </p>
+              {proj.url && (
+                <a href={safeUrl(proj.url)} className="text-sm text-violet-600 hover:underline" target="_blank" rel="noreferrer">
+                  Link ↗
+                </a>
               )}
-              {proj.role && <p className="text-zinc-500 text-[13px] italic mt-0.5">{proj.role}</p>}
-              {proj.description && <p className="text-zinc-600 mt-0.5">{proj.description}</p>}
+              {proj.description && <p className="text-zinc-600 mt-1">{proj.description}</p>}
+              {proj.teamSize && (
+                <p className="text-zinc-500 text-[13px] mt-1">• Team size: {proj.teamSize}</p>
+              )}
+              {proj.role && (
+                <p className="text-zinc-500 text-[13px]">• Role: {proj.role}</p>
+              )}
               {proj.technologies.filter(Boolean).length > 0 && (
-                <p className="text-[13px] text-zinc-400 mt-1">{proj.technologies.join(', ')}</p>
+                <p className="text-zinc-500 text-[13px]">• Technologies: {proj.technologies.join(', ')}</p>
               )}
             </div>
           ))}

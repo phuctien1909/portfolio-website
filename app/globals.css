@@ -17,3 +17,18 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+@keyframes pdf-shimmer {
+  to { background-position: 200% center; }
+}
+.pdf-btn-loading {
+  background: linear-gradient(90deg, #5B21B6 0%, #6D28D9 35%, #A78BFA 50%, #6D28D9 65%, #5B21B6 100%);
+  background-size: 200% auto;
+  animation: pdf-shimmer 1.6s linear infinite;
+}
+@keyframes pdf-spin {
+  to { transform: rotate(360deg); }
+}
+.pdf-spin {
+  animation: pdf-spin 0.75s linear infinite;
+}
