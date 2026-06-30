@@ -6,6 +6,15 @@ export interface PersonalInfo {
   location: string;
   website: string;
   linkedin: string;
+  avatar?: string;
+}
+
+export interface Certificate {
+  id: string;
+  name: string;
+  issuer: string;
+  date: string;
+  url?: string;
 }
 
 export interface WorkExperience {
@@ -34,6 +43,11 @@ export interface Project {
   description: string;
   technologies: string[];
   url: string;
+  location?: string;
+  teamSize?: string;
+  role?: string;
+  startDate?: string;
+  endDate?: string;
 }
 
 export interface CVData {
@@ -43,4 +57,5 @@ export interface CVData {
   education: Education[];
   skills: string[];
   projects: Project[];
+  certificates: Certificate[];
 }
