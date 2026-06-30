@@ -1,8 +1,7 @@
 'use client';
 import { useEffect, useState } from 'react';
 import type { CVData } from '@/lib/cv-types';
-import { loadCV, saveCV } from '@/lib/cv-storage';
-import { defaultCV } from '@/lib/cv-defaults';
+import { loadCV, loadDefaultCV, saveCV } from '@/lib/cv-storage';
 import { CVPreview } from '../CVPreview';
 import { PersonalInfoForm } from './PersonalInfoForm';
 import { SummaryForm } from './SummaryForm';
@@ -42,9 +41,9 @@ export function CVEditor({ initialData }: { initialData?: Partial<CVData> }) {
   }
 
   function reset() {
-    if (window.confirm('Reset all CV data to blank? This cannot be undone.')) {
-      setCV(defaultCV);
-      setDirty(true);
+    if (window.confirm('Discard unsaved changes and revert to last saved CV?')) {
+      setCV(loadDefaultCV());
+      setDirty(false);
       setSaved(false);
     }
   }
