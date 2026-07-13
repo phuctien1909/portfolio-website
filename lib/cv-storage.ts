@@ -1,10 +1,11 @@
-import type { CVData, CVVariant } from './cv-types';
+import type { CVData, CVVariant, JobApplication } from './cv-types';
 import { defaultCV } from './cv-defaults';
 
 const CV_KEY = 'portfolio_cv'; // legacy single-CV key, migration source only
 const CV_DEFAULT_KEY = 'portfolio_cv_default';
 const LIBRARY_KEY = 'portfolio_cv_library';
 const ACTIVE_KEY = 'portfolio_cv_active';
+const APPS_KEY = 'portfolio_applications';
 
 function parse(raw: string | null): CVData | null {
   if (!raw) return null;
@@ -98,6 +99,8 @@ export function deleteVariant(id: string): void {
   if (remaining.length === lib.length) return; // unknown id
   writeLibrary(remaining);
   if (localStorage.getItem(ACTIVE_KEY) === id) setActiveVariant(remaining[0].id);
+  const apps = loadApplications().map(a => (a.cvId === id ? { ...a, cvId: null } : a));
+  writeApplications(apps);
 }
 
 export function loadCV(): CVData {
@@ -139,4 +142,50 @@ export async function importJSON(file: File): Promise<CVData> {
   const text = await file.text();
   const parsed = JSON.parse(text); // throws on bad JSON
   return { ...defaultCV, ...parsed };
+}
+
+export function loadApplications(): JobApplication[] {
+  if (typeof window === 'undefined') return [];
+  try {
+    const parsed = JSON.parse(localStorage.getItem(APPS_KEY) ?? '[]');
+    return Array.isArray(parsed) ? parsed : [];
+  } catch {
+    return [];
+  }
+}
+
+function writeApplications(apps: JobApplication[]): void {
+  localStorage.setItem(APPS_KEY, JSON.stringify(apps));
+}
+
+export function saveApplication(app: JobApplication): void {
+  if (typeof window === 'undefined') return;
+  const apps = loadApplications();
+  const stamped = { ...app, updatedAt: new Date().toISOString() };
+  const exists = apps.some(a => a.id === app.id);
+  writeApplications(exists ? apps.map(a => (a.id === app.id ? stamped : a)) : [...apps, stamped]);
+}
+
+export function deleteApplication(id: string): void {
+  if (typeof window === 'undefined') return;
+  writeApplications(loadApplications().filter(a => a.id !== id));
+}
+
+export function applicationsUsingVariant(cvId: string): JobApplication[] {
+  return loadApplications().filter(a => a.cvId === cvId);
+}
+
+export function newApplication(): JobApplication {
+  const now = new Date();
+  return {
+    id: newId(),
+    company: '',
+    role: '',
+    url: '',
+    appliedDate: now.toISOString().slice(0, 10),
+    status: 'draft',
+    notes: '',
+    cvId: null,
+    updatedAt: now.toISOString(),
+  };
 }
