@@ -18,9 +18,9 @@ const CheckIcon = () => (
 
 type State = 'idle' | 'downloading' | 'done';
 
-export function PDFExportButton({ data }: { data: CVData }) {
+export function PDFExportButton({ data, variantName }: { data: CVData; variantName?: string }) {
   const [state, setState] = useState<State>('idle');
-  const fileName = `${data.personal.name || 'cv'}.pdf`;
+  const fileName = `${[data.personal.name || 'cv', variantName].filter(Boolean).join(' - ')}.pdf`;
 
   function handleClick() {
     setState('downloading');
