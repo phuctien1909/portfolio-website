@@ -59,3 +59,24 @@ export interface CVData {
   projects: Project[];
   certificates: Certificate[];
 }
+
+export interface CVVariant {
+  id: string;
+  name: string;
+  updatedAt: string; // ISO date
+  data: CVData;
+}
+
+export type ApplicationStatus = 'draft' | 'applied' | 'interview' | 'offer' | 'rejected';
+
+export interface JobApplication {
+  id: string;
+  company: string;
+  role: string;
+  url: string;
+  appliedDate: string; // YYYY-MM-DD
+  status: ApplicationStatus;
+  notes: string;
+  cvId: string | null; // references CVVariant.id; null when the variant was deleted
+  updatedAt: string;
+}
