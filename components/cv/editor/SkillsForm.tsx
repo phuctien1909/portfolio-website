@@ -9,6 +9,19 @@ export function SkillsForm({
   onChange: (v: string[]) => void;
 }) {
   const [input, setInput] = useState('');
+  const [dragIndex, setDragIndex] = useState<number | null>(null);
+  const [overIndex, setOverIndex] = useState<number | null>(null);
+
+  function handleDrop(target: number) {
+    if (dragIndex !== null && dragIndex !== target) {
+      const next = [...value];
+      const [moved] = next.splice(dragIndex, 1);
+      next.splice(target, 0, moved);
+      onChange(next);
+    }
+    setDragIndex(null);
+    setOverIndex(null);
+  }
 
   function addSkill() {
     const trimmed = input.trim();
@@ -26,10 +39,26 @@ export function SkillsForm({
   return (
     <div>
       <div className="flex flex-wrap gap-2 mb-4 min-h-8">
-        {value.map(skill => (
+        {value.map((skill, i) => (
           <span
             key={skill}
-            className="flex items-center gap-1 bg-violet-100 text-violet-800 px-2.5 py-1 rounded-full text-sm"
+            draggable
+            onDragStart={() => setDragIndex(i)}
+            onDragOver={e => {
+              e.preventDefault(); // required to allow dropping
+              if (overIndex !== i) setOverIndex(i);
+            }}
+            onDrop={e => {
+              e.preventDefault();
+              handleDrop(i);
+            }}
+            onDragEnd={() => {
+              setDragIndex(null);
+              setOverIndex(null);
+            }}
+            className={`flex items-center gap-1 bg-violet-100 text-violet-800 px-2.5 py-1 rounded-full text-sm ${
+              dragIndex === i ? 'opacity-50 cursor-grabbing' : 'cursor-grab'
+            } ${overIndex === i && dragIndex !== null && dragIndex !== i ? 'ring-2 ring-violet-500' : ''}`}
           >
             {skill}
             <button

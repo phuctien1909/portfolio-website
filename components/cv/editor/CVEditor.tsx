@@ -1,8 +1,21 @@
 'use client';
 import { useEffect, useState } from 'react';
-import type { CVData } from '@/lib/cv-types';
-import { loadCV, loadDefaultCV, saveCV } from '@/lib/cv-storage';
+import type { CVData, CVVariant } from '@/lib/cv-types';
+import {
+  loadCV,
+  loadDefaultCV,
+  saveCV,
+  loadLibrary,
+  getActiveVariant,
+  setActiveVariant,
+  createVariant,
+  duplicateVariant,
+  renameVariant,
+  deleteVariant,
+  applicationsUsingVariant,
+} from '@/lib/cv-storage';
 import { CVPreview } from '../CVPreview';
+import { VariantBar } from './VariantBar';
 import { PersonalInfoForm } from './PersonalInfoForm';
 import { SummaryForm } from './SummaryForm';
 import { ExperienceForm } from './ExperienceForm';
@@ -16,12 +29,16 @@ type Tab = (typeof TABS)[number];
 
 export function CVEditor({ initialData }: { initialData?: Partial<CVData> }) {
   const [cv, setCV] = useState<CVData | null>(null);
+  const [variants, setVariants] = useState<CVVariant[]>([]);
+  const [activeId, setActiveId] = useState('');
   const [tab, setTab] = useState<Tab>('Personal');
   const [saved, setSaved] = useState(false);
   const [dirty, setDirty] = useState(false);
 
   // Load from localStorage only on client to avoid SSR/client hydration mismatch
   useEffect(() => {
+    setVariants(loadLibrary());
+    setActiveId(getActiveVariant().id);
     setCV({ ...loadCV(), ...(initialData ?? {}) });
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -42,10 +59,67 @@ export function CVEditor({ initialData }: { initialData?: Partial<CVData> }) {
 
   function reset() {
     if (window.confirm('Discard unsaved changes and revert to last saved CV?')) {
-      setCV(loadDefaultCV());
+      setCV(loadCV());
       setDirty(false);
       setSaved(false);
     }
+  }
+
+  // Reload everything from storage after a variant operation
+  function refresh() {
+    const lib = loadLibrary();
+    const active = getActiveVariant();
+    setVariants(lib);
+    setActiveId(active.id);
+    setCV(active.data);
+    setDirty(false);
+    setSaved(false);
+  }
+
+  function saveIfDirty() {
+    if (cv && dirty) saveCV(cv);
+  }
+
+  function handleSelect(id: string) {
+    saveIfDirty();
+    setActiveVariant(id);
+    refresh();
+  }
+
+  function handleNew() {
+    const name = window.prompt('Name for the new CV:');
+    if (!name) return;
+    saveIfDirty();
+    createVariant(name, loadDefaultCV());
+    refresh();
+  }
+
+  function handleDuplicate() {
+    const current = variants.find(v => v.id === activeId);
+    const name = window.prompt('Name for the copy:', `${current?.name ?? 'CV'} (copy)`);
+    if (!name) return;
+    saveIfDirty();
+    duplicateVariant(activeId, name);
+    refresh();
+  }
+
+  function handleRename() {
+    const current = variants.find(v => v.id === activeId);
+    const name = window.prompt('New name:', current?.name);
+    if (!name) return;
+    renameVariant(activeId, name);
+    setVariants(loadLibrary()); // names only — keep unsaved edits intact
+  }
+
+  function handleDelete() {
+    const current = variants.find(v => v.id === activeId);
+    const affected = applicationsUsingVariant(activeId);
+    const suffix = affected.length
+      ? `\n\nUsed by ${affected.length} application(s): ${affected.map(a => a.company || '(unnamed)').join(', ')}. They will lose the link.`
+      : '';
+    if (!window.confirm(`Delete CV "${current?.name}"?${suffix}`)) return;
+    deleteVariant(activeId);
+    refresh();
   }
 
   if (!cv) return null;
@@ -54,6 +128,15 @@ export function CVEditor({ initialData }: { initialData?: Partial<CVData> }) {
     <div className="flex gap-6 items-start">
       {/* Editor panel */}
       <div className="flex-1 min-w-0">
+        <VariantBar
+          variants={variants}
+          activeId={activeId}
+          onSelect={handleSelect}
+          onNew={handleNew}
+          onDuplicate={handleDuplicate}
+          onRename={handleRename}
+          onDelete={handleDelete}
+        />
         <div className="flex items-center justify-between mb-5">
           <div className="flex gap-1 flex-wrap p-1 bg-zinc-100 rounded-lg">
             {TABS.map(t => (

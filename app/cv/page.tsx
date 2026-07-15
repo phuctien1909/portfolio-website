@@ -2,8 +2,8 @@
 import { useEffect, useRef, useState } from 'react';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
-import type { CVData } from '@/lib/cv-types';
-import { loadCV, saveCV, exportJSON, importJSON } from '@/lib/cv-storage';
+import type { CVData, CVVariant } from '@/lib/cv-types';
+import { getActiveVariant, createVariant, saveCV, exportJSON, importJSON } from '@/lib/cv-storage';
 import { CVPreview } from '@/components/cv/CVPreview';
 import { PDFImporter } from '@/components/cv/PDFImporter';
 
@@ -13,36 +13,41 @@ const PDFExportButton = dynamic(
 );
 
 export default function CVPage() {
-  const [cv, setCV] = useState<CVData | null>(null);
+  const [variant, setVariant] = useState<CVVariant | null>(null);
   const [showPDFImporter, setShowPDFImporter] = useState(false);
   const jsonInputRef = useRef<HTMLInputElement>(null);
 
-  useEffect(() => { setCV(loadCV()); }, []);
+  useEffect(() => { setVariant(getActiveVariant()); }, []);
 
   function handleJSONImport(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
     if (!file) return;
     importJSON(file)
-      .then(data => { saveCV(data); setCV(data); })
+      .then(data => {
+        const name = file.name.replace(/\.json$/i, '') || 'Imported';
+        createVariant(name, data); // becomes the active variant
+        setVariant(getActiveVariant());
+      })
       .catch(() => alert('Could not parse the JSON file.'));
     e.target.value = '';
   }
 
   function handlePDFImport(partial: Partial<CVData>) {
-    setCV(prev => {
+    setVariant(prev => {
       if (!prev) return prev;
       const merged = {
-        ...prev,
+        ...prev.data,
         ...partial,
-        personal: { ...prev.personal, ...(partial.personal ?? {}) },
+        personal: { ...prev.data.personal, ...(partial.personal ?? {}) },
       };
       saveCV(merged);
-      return merged;
+      return getActiveVariant();
     });
     setShowPDFImporter(false);
   }
 
-  if (!cv) return null;
+  if (!variant) return null;
+  const cv = variant.data;
 
   return (
     <main className="max-w-4xl mx-auto px-4 py-8">
@@ -54,7 +59,7 @@ export default function CVPage() {
         >
           Edit CV
         </Link>
-        <PDFExportButton data={cv} />
+        <PDFExportButton data={cv} variantName={variant.name} />
         <div className="w-px h-5 bg-zinc-300 mx-1" />
         <button
           onClick={() => exportJSON(cv)}
@@ -79,6 +84,7 @@ export default function CVPage() {
         >
           Import PDF
         </button>
+        <span className="ml-auto text-sm text-zinc-400">Variant: {variant.name}</span>
       </div>
 
       {showPDFImporter && (

@@ -8,6 +8,7 @@ export function Navbar() {
         <Link href="/#about" className="hover:text-violet-700 transition-colors">About</Link>
         <Link href="/#projects" className="hover:text-violet-700 transition-colors">Projects</Link>
         <Link href="/#contact" className="hover:text-violet-700 transition-colors">Contact</Link>
+        <Link href="/applications" className="hover:text-violet-700 transition-colors">Applications</Link>
         <Link href="/cv" className="hover:text-violet-700 font-semibold text-zinc-800 transition-colors">CV</Link>
       </div>
     </nav>
