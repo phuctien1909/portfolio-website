@@ -13,7 +13,7 @@ export default function Home() {
 
   return (
     <main>
-      <Hero personal={cv.personal} />
+      <Hero personal={cv.personal} skills={cv.skills} />
       <About summary={cv.summary} />
       <ProjectsSection projects={cv.projects} />
       <Contact personal={cv.personal} />

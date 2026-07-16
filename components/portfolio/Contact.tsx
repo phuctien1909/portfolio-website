@@ -7,7 +7,8 @@ function externalHref(url: string): string {
 export function Contact({ personal }: { personal: PersonalInfo }) {
   return (
     <section id="contact" className="max-w-3xl mx-auto px-6 py-24 text-center">
-      <h2 className="text-2xl font-bold mb-3">Get In Touch</h2>
+      <p className="font-mono text-xs text-violet-700 mb-2">{'// contact'}</p>
+      <h2 className="font-display text-3xl font-bold mb-3">Get In Touch</h2>
       <p className="text-zinc-500 mb-10 max-w-md mx-auto leading-relaxed">
         Whether you have a project in mind, a question, or just want to say hi —
         my inbox is open.
@@ -42,6 +43,9 @@ export function Contact({ personal }: { personal: PersonalInfo }) {
           </a>
         )}
       </div>
+      {personal.email && (
+        <p className="font-mono text-xs text-zinc-400 mt-8">{personal.email}</p>
+      )}
     </section>
   );
 }
