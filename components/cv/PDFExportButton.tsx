@@ -1,7 +1,5 @@
 'use client';
 import { useState } from 'react';
-import { PDFDownloadLink } from '@react-pdf/renderer';
-import { CVPDFDocument } from './CVPDFDocument';
 import type { CVData } from '@/lib/cv-types';
 
 const DownloadIcon = () => (
@@ -16,67 +14,64 @@ const CheckIcon = () => (
   </svg>
 );
 
-type State = 'idle' | 'downloading' | 'done';
+type State = 'idle' | 'building' | 'done';
 
 export function PDFExportButton({ data, variantName }: { data: CVData; variantName?: string }) {
   const [state, setState] = useState<State>('idle');
   const fileName = `${[data.personal.name || 'cv', variantName].filter(Boolean).join(' - ')}.pdf`;
 
-  function handleClick() {
-    setState('downloading');
-    setTimeout(() => {
+  async function handleClick() {
+    if (state !== 'idle') return;
+    setState('building');
+    try {
+      // Load the ~1.4MB PDF engine and build the document only when asked
+      const [{ pdf }, { CVPDFDocument }] = await Promise.all([
+        import('@react-pdf/renderer'),
+        import('./CVPDFDocument'),
+      ]);
+      const blob = await pdf(<CVPDFDocument data={data} />).toBlob();
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = fileName;
+      a.click();
+      setTimeout(() => URL.revokeObjectURL(url), 100);
       setState('done');
       setTimeout(() => setState('idle'), 2200);
-    }, 1200);
+    } catch {
+      setState('idle');
+      alert('Could not build the PDF. Please try again.');
+    }
+  }
+
+  const base = 'inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 select-none';
+
+  if (state === 'building') {
+    return (
+      <button disabled className={`${base} pdf-btn-loading text-white cursor-wait`} title="Preparing your PDF…">
+        <span className="pdf-spin inline-block w-3.5 h-3.5 rounded-full border-2 border-white/30 border-t-white shrink-0" />
+        Building PDF…
+      </button>
+    );
+  }
+
+  if (state === 'done') {
+    return (
+      <button className={`${base} bg-emerald-600 text-white border border-emerald-600`} title={`${fileName} downloaded`}>
+        <CheckIcon />
+        Downloaded
+      </button>
+    );
   }
 
   return (
-    <PDFDownloadLink
-      document={<CVPDFDocument data={data} />}
-      fileName={fileName}
-      style={{ textDecoration: 'none' }}
+    <button
+      onClick={handleClick}
+      className={`${base} border border-violet-600 text-violet-700 bg-white hover:bg-violet-50 hover:border-violet-700`}
+      title={`Download ${fileName}`}
     >
-      {({ loading }) => {
-        const base = 'inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 select-none';
-
-        if (loading) {
-          return (
-            <button disabled className={`${base} pdf-btn-loading text-white cursor-wait`} title="Preparing your PDF…">
-              <span className="pdf-spin inline-block w-3.5 h-3.5 rounded-full border-2 border-white/30 border-t-white shrink-0" />
-              Building PDF…
-            </button>
-          );
-        }
-
-        if (state === 'downloading') {
-          return (
-            <button disabled className={`${base} border border-violet-400 text-violet-500 bg-violet-50 cursor-wait`} title="Starting download…">
-              <span className="pdf-spin inline-block w-3.5 h-3.5 rounded-full border-2 border-violet-300 border-t-violet-600 shrink-0" />
-              Downloading…
-            </button>
-          );
-        }
-
-        if (state === 'done') {
-          return (
-            <button className={`${base} bg-emerald-600 text-white border border-emerald-600`} title={`${fileName} downloaded`}>
-              <CheckIcon />
-              Downloaded
-            </button>
-          );
-        }
-
-        return (
-          <button
-            onClick={handleClick}
-            className={`${base} border border-violet-600 text-violet-700 bg-white hover:bg-violet-50 hover:border-violet-700`}
-            title={`Download ${fileName}`}
-          >
-            <DownloadIcon />
-            Download PDF
-          </button>
-        );
-      }}
-    </PDFDownloadLink>
+      <DownloadIcon />
+      Download PDF
+    </button>
   );
 }

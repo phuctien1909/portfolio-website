@@ -1,16 +1,11 @@
 'use client';
 import { useEffect, useRef, useState } from 'react';
-import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import type { CVData, CVVariant } from '@/lib/cv-types';
 import { getActiveVariant, createVariant, saveCV, exportJSON, importJSON } from '@/lib/cv-storage';
 import { CVPreview } from '@/components/cv/CVPreview';
 import { PDFImporter } from '@/components/cv/PDFImporter';
-
-const PDFExportButton = dynamic(
-  () => import('@/components/cv/PDFExportButton').then(m => m.PDFExportButton),
-  { ssr: false }
-);
+import { PDFExportButton } from '@/components/cv/PDFExportButton';
 
 export default function CVPage() {
   const [variant, setVariant] = useState<CVVariant | null>(null);
