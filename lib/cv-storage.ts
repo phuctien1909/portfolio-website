@@ -175,6 +175,12 @@ export function applicationsUsingVariant(cvId: string): JobApplication[] {
   return loadApplications().filter(a => a.cvId === cvId);
 }
 
+export function loadPortfolioCV(): CVData {
+  if (typeof window === 'undefined') return defaultCV;
+  const lib = loadLibrary();
+  return (lib.find(v => v.name === 'Master') ?? lib[0]).data;
+}
+
 export function newApplication(): JobApplication {
   const now = new Date();
   return {
