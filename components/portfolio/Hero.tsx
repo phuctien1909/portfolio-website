@@ -1,16 +1,18 @@
 import Link from 'next/link';
+import type { PersonalInfo } from '@/lib/cv-types';
 
-export function Hero() {
+export function Hero({ personal }: { personal: PersonalInfo }) {
   return (
     <section className="flex flex-col items-center justify-center min-h-[85vh] text-center px-6 bg-[#0C0A1E]">
       <p className="font-mono text-xs uppercase tracking-[0.25em] text-violet-400 mb-5">
         Hello, I'm
       </p>
       <h1 className="text-5xl md:text-7xl font-bold tracking-tight mb-5 bg-gradient-to-br from-white via-violet-100 to-violet-400 bg-clip-text text-transparent">
-        Your Name
+        {personal.name}
       </h1>
       <p className="text-lg text-zinc-400 max-w-xl mb-10 leading-relaxed">
-        Full-Stack Developer · Building fast, accessible web apps with React and Node.js.
+        {personal.title}
+        {personal.location ? ` · ${personal.location}` : ''}
       </p>
       <div className="flex gap-4 flex-wrap justify-center">
         <Link
