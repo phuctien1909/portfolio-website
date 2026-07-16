@@ -175,6 +175,27 @@ export function applicationsUsingVariant(cvId: string): JobApplication[] {
   return loadApplications().filter(a => a.cvId === cvId);
 }
 
+export function loadPortfolioCV(): CVData {
+  if (typeof window === 'undefined') return defaultCV;
+  const lib = loadLibrary();
+  return (lib.find(v => v.name === 'Master') ?? lib[0]).data;
+}
+
+const OWNER_KEY = 'portfolio_owner';
+
+export function isOwner(): boolean {
+  if (typeof window === 'undefined') return false;
+  return localStorage.getItem(OWNER_KEY) === '1';
+}
+
+export function applyOwnerParam(): boolean {
+  if (typeof window === 'undefined') return false;
+  const param = new URLSearchParams(window.location.search).get('owner');
+  if (param === 'on') localStorage.setItem(OWNER_KEY, '1');
+  if (param === 'off') localStorage.removeItem(OWNER_KEY);
+  return isOwner();
+}
+
 export function newApplication(): JobApplication {
   const now = new Date();
   return {

@@ -1,12 +1,24 @@
 'use client';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import type { CVData } from '@/lib/cv-types';
+import { applyOwnerParam } from '@/lib/cv-storage';
 import { CVEditor } from '@/components/cv/editor/CVEditor';
 import { PDFImporter } from '@/components/cv/PDFImporter';
 
 export default function EditPage() {
+  const router = useRouter();
+  const [allowed, setAllowed] = useState(false);
   const [pdfImport, setPDFImport] = useState<Partial<CVData> | undefined>();
   const [showImporter, setShowImporter] = useState(false);
+
+  useEffect(() => {
+    if (applyOwnerParam()) setAllowed(true);
+    else router.replace('/');
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  if (!allowed) return null;
 
   return (
     <main className="max-w-6xl mx-auto px-4 py-8">

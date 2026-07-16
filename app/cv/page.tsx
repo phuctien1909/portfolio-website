@@ -1,23 +1,22 @@
 'use client';
 import { useEffect, useRef, useState } from 'react';
-import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import type { CVData, CVVariant } from '@/lib/cv-types';
-import { getActiveVariant, createVariant, saveCV, exportJSON, importJSON } from '@/lib/cv-storage';
+import { getActiveVariant, createVariant, saveCV, exportJSON, importJSON, applyOwnerParam } from '@/lib/cv-storage';
 import { CVPreview } from '@/components/cv/CVPreview';
 import { PDFImporter } from '@/components/cv/PDFImporter';
-
-const PDFExportButton = dynamic(
-  () => import('@/components/cv/PDFExportButton').then(m => m.PDFExportButton),
-  { ssr: false }
-);
+import { PDFExportButton } from '@/components/cv/PDFExportButton';
 
 export default function CVPage() {
   const [variant, setVariant] = useState<CVVariant | null>(null);
+  const [owner, setOwner] = useState(false);
   const [showPDFImporter, setShowPDFImporter] = useState(false);
   const jsonInputRef = useRef<HTMLInputElement>(null);
 
-  useEffect(() => { setVariant(getActiveVariant()); }, []);
+  useEffect(() => {
+    setOwner(applyOwnerParam());
+    setVariant(getActiveVariant());
+  }, []);
 
   function handleJSONImport(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
@@ -53,41 +52,47 @@ export default function CVPage() {
     <main className="max-w-4xl mx-auto px-4 py-8">
       {/* Action bar */}
       <div className="flex flex-wrap gap-2 mb-8 items-center">
-        <Link
-          href="/cv/edit"
-          className="px-4 py-2 bg-violet-700 text-white rounded-lg text-sm hover:bg-violet-600 transition-colors font-medium"
-        >
-          Edit CV
-        </Link>
+        {owner && (
+          <Link
+            href="/cv/edit"
+            className="px-4 py-2 bg-violet-700 text-white rounded-lg text-sm hover:bg-violet-600 transition-colors font-medium"
+          >
+            Edit CV
+          </Link>
+        )}
         <PDFExportButton data={cv} variantName={variant.name} />
-        <div className="w-px h-5 bg-zinc-300 mx-1" />
-        <button
-          onClick={() => exportJSON(cv)}
-          className="px-4 py-2 border border-zinc-300 rounded-lg text-sm text-zinc-600 hover:border-zinc-400 hover:text-zinc-900 transition-colors"
-        >
-          Export JSON
-        </button>
-        <button
-          onClick={() => jsonInputRef.current?.click()}
-          className="px-4 py-2 border border-zinc-300 rounded-lg text-sm text-zinc-600 hover:border-zinc-400 hover:text-zinc-900 transition-colors"
-        >
-          Import JSON
-        </button>
-        <input ref={jsonInputRef} type="file" accept=".json" className="hidden" onChange={handleJSONImport} />
-        <button
-          onClick={() => setShowPDFImporter(v => !v)}
-          className={`px-4 py-2 border rounded-lg text-sm transition-colors ${
-            showPDFImporter
-              ? 'bg-violet-50 border-violet-400 text-violet-700'
-              : 'border-zinc-300 text-zinc-600 hover:border-zinc-400 hover:text-zinc-900'
-          }`}
-        >
-          Import PDF
-        </button>
-        <span className="ml-auto text-sm text-zinc-400">Variant: {variant.name}</span>
+        {owner && (
+          <>
+            <div className="w-px h-5 bg-zinc-300 mx-1" />
+            <button
+              onClick={() => exportJSON(cv)}
+              className="px-4 py-2 border border-zinc-300 rounded-lg text-sm text-zinc-600 hover:border-zinc-400 hover:text-zinc-900 transition-colors"
+            >
+              Export JSON
+            </button>
+            <button
+              onClick={() => jsonInputRef.current?.click()}
+              className="px-4 py-2 border border-zinc-300 rounded-lg text-sm text-zinc-600 hover:border-zinc-400 hover:text-zinc-900 transition-colors"
+            >
+              Import JSON
+            </button>
+            <input ref={jsonInputRef} type="file" accept=".json" className="hidden" onChange={handleJSONImport} />
+            <button
+              onClick={() => setShowPDFImporter(v => !v)}
+              className={`px-4 py-2 border rounded-lg text-sm transition-colors ${
+                showPDFImporter
+                  ? 'bg-violet-50 border-violet-400 text-violet-700'
+                  : 'border-zinc-300 text-zinc-600 hover:border-zinc-400 hover:text-zinc-900'
+              }`}
+            >
+              Import PDF
+            </button>
+            <span className="ml-auto text-sm text-zinc-400">Variant: {variant.name}</span>
+          </>
+        )}
       </div>
 
-      {showPDFImporter && (
+      {owner && showPDFImporter && (
         <div className="mb-8">
           <PDFImporter onImport={handlePDFImport} />
         </div>

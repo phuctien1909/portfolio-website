@@ -9,6 +9,7 @@ import {
   newApplication,
   loadLibrary,
   setActiveVariant,
+  applyOwnerParam,
 } from '@/lib/cv-storage';
 
 const STATUSES: ApplicationStatus[] = ['draft', 'applied', 'interview', 'offer', 'rejected'];
@@ -99,8 +100,13 @@ export default function ApplicationsPage() {
   const [expanded, setExpanded] = useState<string | null>(null);
 
   useEffect(() => {
+    if (!applyOwnerParam()) {
+      router.replace('/');
+      return;
+    }
     setApps(loadApplications());
     setVariants(loadLibrary());
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   if (!apps) return null;
