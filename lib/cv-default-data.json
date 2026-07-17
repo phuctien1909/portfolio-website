@@ -1,0 +1,156 @@
+{
+  "personal": {
+    "name": "Nguyen Hoang Phuc Tien",
+    "title": "Test Engineer",
+    "email": "nguyenhoangphuctien190903@gmail.com",
+    "phone": "+84 905 243 599",
+    "location": "Da Nang, Viet Nam",
+    "website": "",
+    "linkedin": "",
+    "avatar": "data:image/jpeg;base64,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"
+  },
+  "summary": "Hi, I am Tien. I graduated in 2025 at Duy Tan University. I have a solid understanding of the Java programming language and more than 1,5 year of real project experience working with Selenium Framework using Java and other similar tools. My goal is to become a professional SDET (Software Engineer In Test), contribute to innovative projects and bring real value to the community through communication and skills. I am willing to face new challenges and constantly strive to be part of future progress and success.",
+  "experience": [
+    {
+      "id": "exp-1",
+      "role": "Test Engineer",
+      "company": "株式会社AGEST(アジェスト)",
+      "location": "Da Nang, Viet Nam",
+      "startDate": "10/2024",
+      "endDate": "02/2026",
+      "bullets": [
+        "Implemented a robust Selenium WebDriver-based framework, resulting in a reduction in manual testing effort.",
+        "Supporting team members, which increased team more productivity.",
+        "Helped maintain QA documentation to support knowledge sharing and onboarding of new team members.",
+        "Collaborated with members and QA teams to identify and report bugs, ensuring software quality.",
+        "Gained hands-on experience with test automation tools such as Selenium, TestNG, or JUnit.",
+        "Learned and applied best practices in test automation and software testing methodologies."
+      ]
+    },
+    {
+      "id": "841f8135-b97f-42bc-b160-059802a64784",
+      "company": "KEYSTONE SOLUTIONS",
+      "role": "Test Engineer",
+      "startDate": "03/2026",
+      "endDate": "Present",
+      "location": "Da Nang, Viet Nam",
+      "bullets": [
+        "Using Tricentis Tosca for testing SAP system",
+        "Document SAP-specific automation standards (naming conventions, module structure, test data strategy) to improve team collaboration and maintainability."
+      ]
+    }
+  ],
+  "education": [
+    {
+      "id": "edu-1",
+      "degree": "Information System Management",
+      "field": "",
+      "institution": "Duy Tan University",
+      "startDate": "09/2021",
+      "endDate": "06/2025",
+      "gpa": "3.42/4.0"
+    }
+  ],
+  "skills": [
+    "Selenium WebDriver",
+    "Playwright (TS)",
+    "Java",
+    "Python",
+    "SQL",
+    "Tricentis Tosca",
+    "Dimesion SwifTest",
+    "Agile Methodology"
+  ],
+  "certificates": [
+    {
+      "id": "960550a4-f02a-4347-98cc-cb35827f0d1d",
+      "name": "TOEIC",
+      "issuer": "685/990",
+      "date": "2025",
+      "url": "https://drive.google.com/file/d/1M8ftEScvh3L1fu9iULQ_Sgg0jk4fcU3t/view?usp=sharing"
+    },
+    {
+      "id": "b5d75617-9d51-43fd-8ed7-4dee83842663",
+      "name": "NatTest N4",
+      "issuer": "",
+      "date": "2026",
+      "url": "https://drive.google.com/file/d/1op3-7bStocTP8m-z398TC5HsfyCf0qgG/view?usp=sharing"
+    },
+    {
+      "id": "fcf5aa3c-acc9-4c7c-814a-f4b53da155ba",
+      "name": "Claude Code 1011",
+      "issuer": "",
+      "date": "2026",
+      "url": "https://drive.google.com/file/d/1vLynBMOXT0_7HwaQuWBZSJBuCfNKYTOS/view?usp=sharing"
+    },
+    {
+      "id": "5165ebc9-67bc-42db-8ea3-87de176360a1",
+      "name": "Claude 101",
+      "issuer": "",
+      "date": "2026",
+      "url": "https://drive.google.com/file/d/1PY8bZHFK5J6JijIl8jFfB8pC49W4FmWs/view?usp=sharing"
+    }
+  ],
+  "projects": [
+    {
+      "id": "proj-1",
+      "name": "Satofuru",
+      "location": "Japan",
+      "description": "Satofuru is an e-commerce project that allows users to browse products, shop online, and make payments directly through the website.",
+      "teamSize": "6 members",
+      "role": "Automation Test Engineer (read test cases, implement them and maintain the scripts, report bugs, ...)",
+      "technologies": [
+        "Selenium",
+        "TestNG",
+        "Allure report"
+      ],
+      "url": "",
+      "startDate": "10/2024",
+      "endDate": "05/2025"
+    },
+    {
+      "id": "proj-2",
+      "name": "ELSwifTest",
+      "location": "USA",
+      "description": "ElSwifTest is a finance and distribution management project that allows users to manage their receipts related to these areas.",
+      "teamSize": "10 members",
+      "role": "Automation Test Engineer (read test cases, implement them and maintain the scripts, report bugs, ...)",
+      "technologies": [
+        "Dimension SwifTest of Oracle"
+      ],
+      "url": "",
+      "startDate": "06/2025",
+      "endDate": "11/2025"
+    },
+    {
+      "id": "proj-3",
+      "name": "Agilis",
+      "location": "Viet Nam",
+      "description": "Agilis is an internal task management tool similar to Trello and Jira, where users can create, organize, and manage their tasks. It is developed specifically for internal use within the organization.",
+      "teamSize": "8 members",
+      "role": "Manual Tester (create and execute test cases, report bugs, ...)",
+      "technologies": [
+        "Postman",
+        "Swagger"
+      ],
+      "url": "",
+      "startDate": "12/2025",
+      "endDate": "02/2026"
+    },
+    {
+      "id": "d38e15a6-3879-4df5-92f1-87559b28ee8b",
+      "name": "TSCTest",
+      "description": "Used Tricentis Tosca to automate testing of SAP applications by creating reusable test cases, validating business processes, executing regression tests, and ensuring data accuracy across SAP modules. Leveraged model-based test automation to improve test coverage, reduce manual effort, and support end-to-end business process validation.",
+      "technologies": [
+        "Tricentis Tosca",
+        "SAP"
+      ],
+      "url": "",
+      "location": "Japan",
+      "teamSize": "4 members",
+      "role": "Automation Test Engineer (read test cases, implement them and maintain the scripts, report bugs, ...)",
+      "startDate": "03/2026",
+      "endDate": "Present"
+    }
+  ]
+}

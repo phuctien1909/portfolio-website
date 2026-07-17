@@ -1,7 +1,7 @@
 'use client';
 import { useEffect, useState } from 'react';
 import { defaultCV } from '@/lib/cv-defaults';
-import { loadPortfolioCV } from '@/lib/cv-storage';
+import { applyOwnerParam, fetchPublishedCV, loadPortfolioCV } from '@/lib/cv-storage';
 import { Hero } from '@/components/portfolio/Hero';
 import { About } from '@/components/portfolio/About';
 import { ProjectsSection } from '@/components/portfolio/ProjectsSection';
@@ -9,7 +9,11 @@ import { Contact } from '@/components/portfolio/Contact';
 
 export default function Home() {
   const [cv, setCV] = useState(defaultCV);
-  useEffect(() => { setCV(loadPortfolioCV()); }, []);
+  useEffect(() => {
+    // owner sees their local Master; visitors see the published CV
+    if (applyOwnerParam()) setCV(loadPortfolioCV());
+    else fetchPublishedCV().then(setCV);
+  }, []);
 
   return (
     <main>

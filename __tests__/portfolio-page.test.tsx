@@ -29,7 +29,8 @@ test('renders name, first project, and email button from default CV', async () =
   expect(screen.getByText('Email Me')).toHaveAttribute('href', `mailto:${defaultCV.personal.email}`);
 });
 
-test('renders the stored Master variant data', async () => {
+test('renders the stored Master variant data in owner mode', async () => {
+  mockStorage.setItem('portfolio_owner', '1');
   mockStorage.setItem('portfolio_cv_library', JSON.stringify([
     {
       id: 'm',
