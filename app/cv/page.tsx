@@ -2,7 +2,7 @@
 import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import type { CVData, CVVariant } from '@/lib/cv-types';
-import { getActiveVariant, createVariant, saveCV, exportJSON, importJSON, applyOwnerParam } from '@/lib/cv-storage';
+import { getActiveVariant, createVariant, saveCV, exportJSON, importJSON, applyOwnerParam, fetchPublishedCV } from '@/lib/cv-storage';
 import { CVPreview } from '@/components/cv/CVPreview';
 import { PDFImporter } from '@/components/cv/PDFImporter';
 import { PDFExportButton } from '@/components/cv/PDFExportButton';
@@ -14,8 +14,11 @@ export default function CVPage() {
   const jsonInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    setOwner(applyOwnerParam());
-    setVariant(getActiveVariant());
+    const o = applyOwnerParam();
+    setOwner(o);
+    // owner works on their local variants; visitors see the published CV
+    if (o) setVariant(getActiveVariant());
+    else fetchPublishedCV().then(data => setVariant({ id: 'published', name: 'Published', updatedAt: '', data }));
   }, []);
 
   function handleJSONImport(e: React.ChangeEvent<HTMLInputElement>) {

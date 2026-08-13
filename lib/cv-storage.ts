@@ -126,6 +126,39 @@ export function saveCV(data: CVData): void {
   } catch {
     /* noop */
   }
+  // saving Master publishes it as the CV every visitor sees
+  if (active.name === 'Master') publishCV(data);
+}
+
+// Publish to /api/cv-defaults. Needs the publish token, stored once via ?token=...
+// in the URL (see applyOwnerParam). Silently skipped when no token is set up.
+export function publishCV(data: CVData): void {
+  if (typeof window === 'undefined') return;
+  const token = localStorage.getItem(PUBLISH_TOKEN_KEY);
+  if (!token) return;
+  fetch('/api/cv-defaults', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+    body: JSON.stringify(data),
+  })
+    .then(res => {
+      if (!res.ok) alert(`Publish failed (${res.status}) — visitors still see the previous CV.`);
+    })
+    .catch(() => alert('Publish failed (network error) — visitors still see the previous CV.'));
+}
+
+// The CV visitors see: published version from the server, baked-in default as fallback
+export async function fetchPublishedCV(): Promise<CVData> {
+  try {
+    const res = await fetch('/api/cv-defaults');
+    if (res.ok) {
+      const merged = parse(await res.text());
+      if (merged) return merged;
+    }
+  } catch {
+    /* fall through */
+  }
+  return defaultCV;
 }
 
 export function exportJSON(data: CVData): void {
@@ -182,6 +215,7 @@ export function loadPortfolioCV(): CVData {
 }
 
 const OWNER_KEY = 'portfolio_owner';
+const PUBLISH_TOKEN_KEY = 'portfolio_publish_token';
 
 export function isOwner(): boolean {
   if (typeof window === 'undefined') return false;
@@ -190,9 +224,13 @@ export function isOwner(): boolean {
 
 export function applyOwnerParam(): boolean {
   if (typeof window === 'undefined') return false;
-  const param = new URLSearchParams(window.location.search).get('owner');
+  const params = new URLSearchParams(window.location.search);
+  const param = params.get('owner');
   if (param === 'on') localStorage.setItem(OWNER_KEY, '1');
   if (param === 'off') localStorage.removeItem(OWNER_KEY);
+  // one-time publish setup: visit with ?token=<CV_PUBLISH_TOKEN> to enable publishing
+  const token = params.get('token');
+  if (token) localStorage.setItem(PUBLISH_TOKEN_KEY, token);
   return isOwner();
 }
 
