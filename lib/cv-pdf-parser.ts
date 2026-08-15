@@ -1,4 +1,4 @@
-import type { CVData } from './cv-types';
+import type { CVData, ParsedCV } from './cv-types';
 import { defaultCV } from './cv-defaults';
 
 // MM/YYYY - MM/YYYY  or  MM/YYYY - Present
@@ -38,7 +38,7 @@ export async function extractTextFromPDF(file: File): Promise<string[]> {
   return lines;
 }
 
-export function parseLinesToCV(lines: string[]): Partial<CVData> {
+export function parseLinesToCV(lines: string[]): ParsedCV {
   if (!lines.length) return {};
 
   // ── Personal info: scan ALL lines with regex (order-independent) ──────────

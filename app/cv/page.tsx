@@ -1,8 +1,8 @@
 'use client';
 import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
-import type { CVData, CVVariant } from '@/lib/cv-types';
-import { getActiveVariant, createVariant, saveCV, exportJSON, importJSON, applyOwnerParam, fetchPublishedCV } from '@/lib/cv-storage';
+import type { CVVariant, ParsedCV } from '@/lib/cv-types';
+import { getActiveVariant, createVariant, saveCV, exportJSON, importJSON, applyOwnerParam, fetchPublishedCV, normalizeSkills } from '@/lib/cv-storage';
 import { CVPreview } from '@/components/cv/CVPreview';
 import { PDFImporter } from '@/components/cv/PDFImporter';
 import { PDFExportButton } from '@/components/cv/PDFExportButton';
@@ -34,13 +34,14 @@ export default function CVPage() {
     e.target.value = '';
   }
 
-  function handlePDFImport(partial: Partial<CVData>) {
+  function handlePDFImport(partial: ParsedCV) {
     setVariant(prev => {
       if (!prev) return prev;
       const merged = {
         ...prev.data,
         ...partial,
         personal: { ...prev.data.personal, ...(partial.personal ?? {}) },
+        skills: partial.skills ? normalizeSkills(partial.skills) : prev.data.skills,
       };
       saveCV(merged);
       return getActiveVariant();

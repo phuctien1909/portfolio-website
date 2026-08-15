@@ -1,6 +1,6 @@
 'use client';
 import { useEffect, useState } from 'react';
-import type { CVData, CVVariant } from '@/lib/cv-types';
+import type { CVData, CVVariant, ParsedCV } from '@/lib/cv-types';
 import {
   loadCV,
   loadDefaultCV,
@@ -13,6 +13,7 @@ import {
   renameVariant,
   deleteVariant,
   applicationsUsingVariant,
+  normalizeSkills,
 } from '@/lib/cv-storage';
 import { CVPreview } from '../CVPreview';
 import { VariantBar } from './VariantBar';
@@ -27,7 +28,7 @@ import { CertificatesForm } from './CertificatesForm';
 const TABS = ['Personal', 'Summary', 'Experience', 'Education', 'Skills', 'Projects', 'Certificates'] as const;
 type Tab = (typeof TABS)[number];
 
-export function CVEditor({ initialData }: { initialData?: Partial<CVData> }) {
+export function CVEditor({ initialData }: { initialData?: ParsedCV }) {
   const [cv, setCV] = useState<CVData | null>(null);
   const [variants, setVariants] = useState<CVVariant[]>([]);
   const [activeId, setActiveId] = useState('');
@@ -39,7 +40,12 @@ export function CVEditor({ initialData }: { initialData?: Partial<CVData> }) {
   useEffect(() => {
     setVariants(loadLibrary());
     setActiveId(getActiveVariant().id);
-    setCV({ ...loadCV(), ...(initialData ?? {}) });
+    const base = loadCV();
+    setCV({
+      ...base,
+      ...(initialData ?? {}),
+      skills: initialData?.skills ? normalizeSkills(initialData.skills) : base.skills,
+    });
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

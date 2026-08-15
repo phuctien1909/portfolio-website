@@ -52,14 +52,31 @@
     }
   ],
   "skills": [
-    "Selenium WebDriver",
-    "Playwright (TS)",
-    "Java",
-    "Python",
-    "SQL",
-    "Tricentis Tosca",
-    "Dimesion SwifTest",
-    "Agile Methodology"
+    {
+      "id": "skill-languages",
+      "category": "Languages",
+      "items": ["Java", "Python"]
+    },
+    {
+      "id": "skill-frameworks",
+      "category": "Frameworks",
+      "items": ["Selenium WebDriver", "Playwright (TS)"]
+    },
+    {
+      "id": "skill-databases",
+      "category": "Databases",
+      "items": ["SQL"]
+    },
+    {
+      "id": "skill-tools",
+      "category": "Tools",
+      "items": ["Tricentis Tosca", "Dimesion SwifTest"]
+    },
+    {
+      "id": "skill-methodology",
+      "category": "Methodology",
+      "items": ["Agile Methodology"]
+    }
   ],
   "certificates": [
     {

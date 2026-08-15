@@ -1,10 +1,10 @@
 'use client';
 import { useRef, useState } from 'react';
-import type { CVData } from '@/lib/cv-types';
+import type { ParsedCV } from '@/lib/cv-types';
 
 type Status = 'idle' | 'dragging' | 'loading' | 'done' | 'error';
 
-export function PDFImporter({ onImport }: { onImport: (data: Partial<CVData>) => void }) {
+export function PDFImporter({ onImport }: { onImport: (data: ParsedCV) => void }) {
   const [status, setStatus] = useState<Status>('idle');
   const [preview, setPreview] = useState<string[]>([]);
   const inputRef = useRef<HTMLInputElement>(null);

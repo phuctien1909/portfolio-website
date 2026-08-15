@@ -37,6 +37,9 @@ const s = StyleSheet.create({
   bullet: { marginLeft: 10, marginBottom: 1.5, fontWeight: 'normal', color: '#555' },
   projDesc: { marginTop: 4, marginBottom: 3, fontWeight: 'normal', color: '#555' },
   tag: { color: '#888', fontSize: 9 },
+  skillRow: { flexDirection: 'row', marginBottom: 2 },
+  skillCat: { fontWeight: 'bold', fontSize: 10.5, color: '#444' },
+  skillItems: { flex: 1, fontSize: 10.5, color: '#555' },
 });
 
 export function CVPDFDocument({ data }: { data: CVData }) {
@@ -102,7 +105,12 @@ export function CVPDFDocument({ data }: { data: CVData }) {
         {skills.length > 0 ? (
           <>
             <Text style={s.sectionTitle}>Skills</Text>
-            <Text>{skills.join(' · ')}</Text>
+            {skills.map((group, i) => (
+              <View key={i} style={s.skillRow}>
+                {group.category ? <Text style={s.skillCat}>{group.category}: </Text> : null}
+                <Text style={s.skillItems}>{group.items.join(', ')}</Text>
+              </View>
+            ))}
           </>
         ) : null}
 

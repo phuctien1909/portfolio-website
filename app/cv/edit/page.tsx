@@ -1,7 +1,7 @@
 'use client';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import type { CVData } from '@/lib/cv-types';
+import type { ParsedCV } from '@/lib/cv-types';
 import { applyOwnerParam } from '@/lib/cv-storage';
 import { CVEditor } from '@/components/cv/editor/CVEditor';
 import { PDFImporter } from '@/components/cv/PDFImporter';
@@ -9,7 +9,7 @@ import { PDFImporter } from '@/components/cv/PDFImporter';
 export default function EditPage() {
   const router = useRouter();
   const [allowed, setAllowed] = useState(false);
-  const [pdfImport, setPDFImport] = useState<Partial<CVData> | undefined>();
+  const [pdfImport, setPDFImport] = useState<ParsedCV | undefined>();
   const [showImporter, setShowImporter] = useState(false);
 
   useEffect(() => {

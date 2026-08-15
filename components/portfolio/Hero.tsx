@@ -1,8 +1,9 @@
 import Link from 'next/link';
-import type { PersonalInfo } from '@/lib/cv-types';
+import type { PersonalInfo, SkillGroup } from '@/lib/cv-types';
 
-export function Hero({ personal, skills }: { personal: PersonalInfo; skills: string[] }) {
+export function Hero({ personal, skills }: { personal: PersonalInfo; skills: SkillGroup[] }) {
   const specName = `${(personal.name.split(' ').pop() || 'cv').toLowerCase()}.spec.ts`;
+  const topSkills = skills.flatMap(g => g.items).slice(0, 3);
 
   return (
     <section className="relative flex flex-col items-center justify-center min-h-[85vh] text-center px-6 bg-[#0C0A1E] overflow-hidden">
@@ -28,7 +29,7 @@ export function Hero({ personal, skills }: { personal: PersonalInfo; skills: str
           {personal.location ? ` · ${personal.location}` : ''}
         </p>
 
-        {skills.length > 0 && (
+        {topSkills.length > 0 && (
           <div className="rise rise-3 inline-block text-left font-mono text-[13px] leading-6 bg-white/[0.04] border border-white/10 rounded-lg px-5 py-4 mb-10 backdrop-blur-sm">
             <p className="mb-1">
               <span className="bg-emerald-500/15 text-emerald-300 font-semibold px-1.5 py-0.5 rounded mr-2">
@@ -36,7 +37,7 @@ export function Hero({ personal, skills }: { personal: PersonalInfo; skills: str
               </span>
               <span className="text-zinc-300">{specName}</span>
             </p>
-            {skills.slice(0, 3).map(skill => (
+            {topSkills.map(skill => (
               <p key={skill} className="text-zinc-400">
                 <span className="text-emerald-400 mr-2">✓</span>
                 {skill}

@@ -10,8 +10,7 @@ export function Contact({ personal }: { personal: PersonalInfo }) {
       <p className="font-mono text-xs text-violet-700 mb-2">{'// contact'}</p>
       <h2 className="font-display text-3xl font-bold mb-3">Get In Touch</h2>
       <p className="text-zinc-500 mb-10 max-w-md mx-auto leading-relaxed">
-        Whether you have a project in mind, a question, or just want to say hi —
-        my inbox is open.
+        Have a project in mind, a question, or just want to say hi? My inbox is open.
       </p>
       <div className="flex justify-center gap-3 flex-wrap text-sm">
         {personal.email && (

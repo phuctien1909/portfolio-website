@@ -101,11 +101,22 @@ export function CVPreview({ data }: { data: CVData }) {
 
       {skills.length > 0 && (
         <Section title="Skills">
-          <div className="flex flex-wrap gap-1.5">
-            {skills.map((s, i) => (
-              <span key={i} className="bg-violet-50 text-violet-700 text-sm px-2.5 py-0.5 rounded-full font-medium">
-                {s}
-              </span>
+          <div className="space-y-2">
+            {skills.map(group => (
+              <div key={group.id} className="flex flex-col sm:flex-row sm:items-baseline gap-1 sm:gap-3">
+                {group.category && (
+                  <span className="text-[13px] font-semibold text-zinc-500 shrink-0 sm:w-32">
+                    {group.category}
+                  </span>
+                )}
+                <div className="flex flex-wrap gap-1.5">
+                  {group.items.map((s, i) => (
+                    <span key={i} className="bg-violet-50 text-violet-700 text-sm px-2.5 py-0.5 rounded-full font-medium">
+                      {s}
+                    </span>
+                  ))}
+                </div>
+              </div>
             ))}
           </div>
         </Section>
