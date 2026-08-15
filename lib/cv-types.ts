@@ -50,15 +50,24 @@ export interface Project {
   endDate?: string;
 }
 
+export interface SkillGroup {
+  id: string;
+  category: string; // e.g. "Languages", "Frameworks", "Databases", "Tools"
+  items: string[];
+}
+
 export interface CVData {
   personal: PersonalInfo;
   summary: string;
   experience: WorkExperience[];
   education: Education[];
-  skills: string[];
+  skills: SkillGroup[];
   projects: Project[];
   certificates: Certificate[];
 }
+
+// PDF parser output: skills come out flat before the user groups them
+export type ParsedCV = Partial<Omit<CVData, 'skills'>> & { skills?: string[] };
 
 export interface CVVariant {
   id: string;

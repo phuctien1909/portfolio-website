@@ -1,4 +1,4 @@
-import { loadCV, saveCV, importJSON } from '../lib/cv-storage';
+import { loadCV, saveCV, importJSON, normalizeSkills } from '../lib/cv-storage';
 import { defaultCV } from '../lib/cv-defaults';
 
 const mockStorage = (() => {
@@ -61,4 +61,30 @@ test('importJSON merges with defaults (missing fields filled in)', async () => {
   const result = await importJSON(file);
   expect(result.personal).toEqual(defaultCV.personal);
   expect(result.summary).toBe('Only summary');
+});
+
+test('normalizeSkills wraps a legacy flat string[] into one group', () => {
+  const result = normalizeSkills(['Java', 'Python', '  ', 'SQL']);
+  expect(result).toHaveLength(1);
+  expect(result[0].category).toBe('Skills');
+  expect(result[0].items).toEqual(['Java', 'Python', 'SQL']);
+});
+
+test('normalizeSkills keeps grouped data and drops empty groups', () => {
+  const result = normalizeSkills([
+    { id: 'a', category: 'Languages', items: ['Java'] },
+    { id: 'b', category: 'Empty', items: [] },
+    { category: 'Tools', items: ['Tosca'] }, // missing id gets one generated
+  ]);
+  expect(result).toHaveLength(2);
+  expect(result[0]).toEqual({ id: 'a', category: 'Languages', items: ['Java'] });
+  expect(result[1].category).toBe('Tools');
+  expect(result[1].id).toBeTruthy();
+});
+
+test('importJSON migrates a legacy string[] skills export', async () => {
+  const legacy = { ...defaultCV, skills: ['Java', 'Python'] };
+  const file = new File([JSON.stringify(legacy)], 'cv.json', { type: 'application/json' });
+  const result = await importJSON(file);
+  expect(result.skills[0].items).toEqual(['Java', 'Python']);
 });

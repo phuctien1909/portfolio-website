@@ -1,5 +1,23 @@
-import type { CVData, CVVariant, JobApplication } from './cv-types';
+import type { CVData, CVVariant, JobApplication, SkillGroup } from './cv-types';
 import { defaultCV } from './cv-defaults';
+
+// Coerce skills into grouped form. Old data (and PDF/JSON imports) stored a flat
+// string[]; wrap those into one "Skills" group so nothing is lost on upgrade.
+export function normalizeSkills(raw: unknown): SkillGroup[] {
+  if (!Array.isArray(raw)) return [];
+  if (raw.every(x => typeof x === 'string')) {
+    const items = (raw as string[]).map(s => s.trim()).filter(Boolean);
+    return items.length ? [{ id: newId(), category: 'Skills', items }] : [];
+  }
+  return (raw as Record<string, unknown>[])
+    .filter(g => g && typeof g === 'object')
+    .map(g => ({
+      id: typeof g.id === 'string' ? g.id : newId(),
+      category: typeof g.category === 'string' ? g.category : '',
+      items: Array.isArray(g.items) ? g.items.filter((s): s is string => typeof s === 'string' && !!s.trim()) : [],
+    }))
+    .filter(g => g.items.length > 0);
+}
 
 const CV_KEY = 'portfolio_cv'; // legacy single-CV key, migration source only
 const CV_DEFAULT_KEY = 'portfolio_cv_default';
@@ -11,7 +29,12 @@ function parse(raw: string | null): CVData | null {
   if (!raw) return null;
   try {
     const stored = JSON.parse(raw);
-    return { ...defaultCV, ...stored, personal: { ...defaultCV.personal, ...(stored.personal ?? {}) } };
+    return {
+      ...defaultCV,
+      ...stored,
+      personal: { ...defaultCV.personal, ...(stored.personal ?? {}) },
+      skills: normalizeSkills(stored.skills ?? defaultCV.skills),
+    };
   } catch {
     return null;
   }
@@ -53,7 +76,12 @@ export function loadLibrary(): CVVariant[] {
     // deep-merge each variant's data with defaults so old exports gain new fields
     return lib.map(v => ({
       ...v,
-      data: { ...defaultCV, ...v.data, personal: { ...defaultCV.personal, ...(v.data?.personal ?? {}) } },
+      data: {
+        ...defaultCV,
+        ...v.data,
+        personal: { ...defaultCV.personal, ...(v.data?.personal ?? {}) },
+        skills: normalizeSkills(v.data?.skills ?? defaultCV.skills),
+      },
     }));
   } catch {
     return migrate();
@@ -174,7 +202,7 @@ export function exportJSON(data: CVData): void {
 export async function importJSON(file: File): Promise<CVData> {
   const text = await file.text();
   const parsed = JSON.parse(text); // throws on bad JSON
-  return { ...defaultCV, ...parsed };
+  return { ...defaultCV, ...parsed, skills: normalizeSkills(parsed.skills ?? defaultCV.skills) };
 }
 
 export function loadApplications(): JobApplication[] {
