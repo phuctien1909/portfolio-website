@@ -2,6 +2,7 @@ import {
   Document, Page, Text, View, Link, Image, StyleSheet, Font,
 } from '@react-pdf/renderer';
 import type { CVData } from '@/lib/cv-types';
+import { externalHref as safeUrl } from '@/lib/url';
 
 // Register all needed variants to the same WOFF — no true italic/bold exists for NotoSansJP
 Font.register({
@@ -14,9 +15,6 @@ Font.register({
   ],
 });
 
-function safeUrl(url: string): string {
-  return /^https?:\/\//i.test(url) ? url : '#';
-}
 
 const s = StyleSheet.create({
   page: { padding: 40, fontFamily: 'NotoSansJP', fontSize: 11, color: '#1a1a1a' },
