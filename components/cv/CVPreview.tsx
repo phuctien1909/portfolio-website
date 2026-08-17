@@ -1,8 +1,5 @@
 import type { CVData } from '@/lib/cv-types';
-
-function safeUrl(url: string): string {
-  return /^https?:\/\//i.test(url) ? url : '#';
-}
+import { externalHref as safeUrl } from '@/lib/url';
 
 export function CVPreview({ data }: { data: CVData }) {
   const { personal, summary, experience, education, skills, projects, certificates } = data;

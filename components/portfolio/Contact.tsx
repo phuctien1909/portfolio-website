@@ -1,8 +1,5 @@
 import type { PersonalInfo } from '@/lib/cv-types';
-
-function externalHref(url: string): string {
-  return url.startsWith('http') ? url : `https://${url}`;
-}
+import { externalHref } from '@/lib/url';
 
 export function Contact({ personal }: { personal: PersonalInfo }) {
   return (
